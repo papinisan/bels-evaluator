@@ -2,7 +2,14 @@ library(shiny)
 
 # Define the UI
 ui <- fluidPage(
-  
+  # Tracking script
+  tags$head(
+    tags$script(
+      `data-goatcounter` = "https://bels-evaluator.goatcounter.com/count",
+      async = TRUE,
+      src = "//gc.zgo.at/count.js"
+    )
+  ),
   titlePanel("Brief Exposure Learning Studies (BELS) Design Evaluator"),
   
   sidebarLayout(
@@ -68,7 +75,26 @@ ui <- fluidPage(
       width = 5,
       h3("Study Design Evaluation"),
       hr(),
-      uiOutput("recommendations")
+      uiOutput("recommendations"),
+      
+      # Visitor Counter Display
+      tags$div(
+        style = "margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-weight: bold; color: #444;",
+        tags$p(id = "visitor-count", "BELS Evaluator Users (since 2026): ...")
+      ),
+      
+      # Script to fetch and format the count
+      tags$script(HTML("
+  fetch('https://bels-evaluator.goatcounter.com/counter/TOTAL.json')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('visitor-count').innerText = 'BELS Evaluator Users (since 2026): ' + data.count;
+    })
+    .catch(err => {
+      document.getElementById('visitor-count').innerText = 'Thank you for using!';
+    });
+"))
+      
     )
   )
 )
