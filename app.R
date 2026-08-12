@@ -2,14 +2,16 @@ library(shiny)
 
 # Define the UI
 ui <- fluidPage(
-  # 1. TRACKING SCRIPT (Recorder)
   tags$head(
-    tags$script(
-      `data-goatcounter` = "https://bels-evaluator.goatcounter.com/count",
-      async = TRUE,
-      src = "https://gc.zgo.at/count.js"
-    )
+    tags$script(HTML("
+      window.goatcounter = {
+        endpoint: 'https://bels-evaluator.goatcounter.com/count',
+        allow_local: true
+      };
+    ")),
+    tags$script(async = TRUE, src = "https://gc.zgo.at/count.js")
   ),
+  
   titlePanel("Brief Exposure Learning Studies (BELS) Design Evaluator"),
   
   sidebarLayout(

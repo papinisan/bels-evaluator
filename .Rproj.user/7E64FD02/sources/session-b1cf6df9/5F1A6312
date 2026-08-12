@@ -3,7 +3,7 @@
     "path": "~/UH Dropbox/Santiago Papini/research/app-bels/app.R",
     "project_path": "app.R",
     "type": "r_source",
-    "hash": "3667859338",
+    "hash": "1640559159",
     "contents": "",
     "dirty": false,
     "created": 1786567797961.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "200,34",
-        "scrollLine": "170"
+        "cursorPosition": "3,16",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1786578271,
+    "lastKnownWriteTime": 1786578636,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1786578271696,
+    "last_content_update": 1786578636105,
     "read_only": false,
     "read_only_alternatives": []
 }
