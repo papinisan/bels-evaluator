@@ -78,23 +78,26 @@ ui <- fluidPage(
       hr(),
       uiOutput("recommendations"),
       
-      # 2. VISITOR COUNTER DISPLAY
+      # Custom Visitor Counter Display
       tags$div(
         style = "margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-weight: bold; color: #444;",
         tags$p(id = "visitor-count", "BELS Evaluator Users: ...")
       ),
       
-      # Script to fetch and format the count
+      # Script to fetch count and prepend your custom label
       tags$script(HTML("
-        fetch('https://bels-evaluator.goatcounter.com/counter/TOTAL.json')
-          .then(response => response.json())
-          .then(data => {
-            document.getElementById('visitor-count').innerText = 'BELS Evaluator Users: ' + data.count;
-          })
-          .catch(err => {
-            document.getElementById('visitor-count').innerText = 'Thank you for using!';
-          });
-      "))
+  fetch('https://bels-evaluator.goatcounter.com/counter/TOTAL.json')
+    .then(response => {
+      if (!response.ok) throw new Error('Counter disabled or restricted');
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('visitor-count').innerText = 'BELS Evaluator Users: ' + data.count;
+    })
+    .catch(err => {
+      console.log('GoatCounter error:', err);
+    });
+"))
     )
   )
 )
