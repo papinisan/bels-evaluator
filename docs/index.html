@@ -18,7 +18,19 @@
     </script>
     <link rel="stylesheet" href="./shinylive/style-resets.css" />
     <link rel="stylesheet" href="./shinylive/shinylive.css" />
-    <script data-goatcounter="https://bels-evaluator.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    
+      <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      <script>
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            for (let registration of registrations) { registration.unregister(); }
+          });
+        }
+      </script>
+      <script data-goatcounter="https://bels-evaluator.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+    
   </head>
   <body>
     
