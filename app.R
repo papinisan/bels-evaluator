@@ -13,10 +13,16 @@ ui <- fluidPage(
   ),
   
   titlePanel("Brief Exposure Learning Studies (BELS) Design Evaluator"),
+  tags$p(tags$em("Please cite: <CITATION WILL GO HERE WHEN PUBLISHED>"), 
+         style = "font-size: 0.95em; color: #555; margin-top: -5px; margin-bottom: 20px;"),
   
   sidebarLayout(
     sidebarPanel(
       width = 7,
+      
+      # Start Over Button
+      actionButton("reset_btn", "🔄 Start Over / Clear All", class = "btn-danger btn-sm", style = "margin-bottom: 15px;"),
+      hr(style = "margin-top: 5px; margin-bottom: 15px;"),
       
       h4("1. Study Objectives & Sample"),
       checkboxGroupInput("q1", 
@@ -52,10 +58,11 @@ ui <- fluidPage(
       hr(),
       h4("2. Design & Statistics"),
       radioButtons("q5", 
-                   "How will financial compensation be structured for participants?",
+                   "How will compensation be structured for participants? (For example, students may be receiving course credit.)",
                    choices = c("Tied directly to assessment sessions (e.g., completing baseline/follow-up measures)." = "A",
                                "Tied directly to completion of the exposure interventions." = "B",
-                               "A single flat fee paid only upon complete study finish." = "C"),
+                               "A single flat fee / credit provided only upon complete study finish." = "C",
+                               "No compensation is included." = "D"),
                    selected = character(0)),
       
       checkboxGroupInput("q6", 
@@ -95,7 +102,7 @@ ui <- fluidPage(
       checkboxGroupInput("q10", 
                          "How are you structuring your measurements? (Select all that apply)",
                          choices = c("Measures use multiple items when possible." = "r15",
-                                     "Single-item measures are obtained frequently." = "r16",
+                                     "Single-item measures are included." = "r16_used",
                                      "Includes common symptom measures at baseline and over time." = "r20",
                                      "Outcomes are assessed using multiple modalities." = "r21",
                                      "Measurement tasks might interfere with the intended dose of exposure." = "r22_fail")),
@@ -147,7 +154,23 @@ ui <- fluidPage(
 )
 
 # Define the Server logic
-server <- function(input, output) {
+server <- function(input, output, session) {
+  
+  # Reset / Start Over Handler
+  observeEvent(input$reset_btn, {
+    updateCheckboxGroupInput(session, "q1", selected = character(0))
+    updateCheckboxGroupInput(session, "q2", selected = character(0))
+    updateCheckboxGroupInput(session, "q3", selected = character(0))
+    updateRadioButtons(session, "q4", selected = character(0))
+    updateRadioButtons(session, "q5", selected = character(0))
+    updateCheckboxGroupInput(session, "q6", selected = character(0))
+    updateRadioButtons(session, "q7", selected = character(0))
+    updateCheckboxGroupInput(session, "q8", selected = character(0))
+    updateRadioButtons(session, "q9", selected = character(0))
+    updateCheckboxGroupInput(session, "q10", selected = character(0))
+    updateCheckboxGroupInput(session, "q11", selected = character(0))
+    updateCheckboxGroupInput(session, "q12", selected = character(0))
+  })
   
   # Helper function to generate section UI
   build_section_ui <- function(title, in_line, needs_update) {
@@ -229,8 +252,8 @@ server <- function(input, output) {
       plans_mod_med <- any(c("B", "C") %in% q6)
       if (q7 == "C" || (plans_mod_med && q7 != "A")) { s2_up[[length(s2_up) + 1]] <- r4_text } else { s2_in[[length(s2_in) + 1]] <- r4_text }
       
-      inc_text <- p(tags$b("(Incentives)"), " Tie financial incentives for BELS to assessments rather than intervention completion such that participant report of symptoms is unlikely to be contaminated by desire to be in the study.", style = "margin-bottom: 10px;")
-      if (q5 == "A") { s2_in[[length(s2_in) + 1]] <- inc_text } else { s2_up[[length(s2_up) + 1]] <- inc_text }
+      inc_text <- p(tags$b("(Incentives)"), " Tie financial or credit compensation for BELS to assessments rather than intervention completion such that participant report of symptoms is unlikely to be contaminated by desire to be in the study.", style = "margin-bottom: 10px;")
+      if (q5 %in% c("A", "D")) { s2_in[[length(s2_in) + 1]] <- inc_text } else { s2_up[[length(s2_up) + 1]] <- inc_text }
     }
     
     # ==========================
@@ -269,8 +292,8 @@ server <- function(input, output) {
       r15_text <- p(tags$b("(R15)"), " When possible, measures in BELS should include multiple items.", style = "margin-bottom: 10px;")
       if (!is.null(q10) && "r15" %in% q10) { s4_in[[length(s4_in) + 1]] <- r15_text } else { s4_up[[length(s4_up) + 1]] <- r15_text }
       
-      r16_text <- p(tags$b("(R16)"), " When single-item measures are preferable... these should be obtained frequently enough that multiple ratings can be obtained for each eventual measure to be used.", style = "margin-bottom: 10px;")
-      if (!is.null(q10) && "r16" %in% q10) { s4_in[[length(s4_in) + 1]] <- r16_text } else { s4_up[[length(s4_up) + 1]] <- r16_text }
+      r16_text <- p(tags$b("(R16)"), " When single-item measures are preferable (e.g., to maintain flow of exposure)... these should be obtained frequently enough that multiple ratings can be obtained for each eventual measure to be used.", style = "margin-bottom: 10px;")
+      if (!is.null(q10) && "r16_used" %in% q10) { s4_up[[length(s4_up) + 1]] <- r16_text } else { s4_in[[length(s4_in) + 1]] <- r16_text }
       
       r17_18_text <- p(tags$b("(R17 & R18)"), " Reliability of all meaningful units in BELS should be calculated ahead of testing hypotheses. When good reliability has not been obtained, BELS should focus on how to obtain it.", style = "margin-bottom: 10px;")
       if (!is.null(q11) && "r17_18" %in% q11) { s4_in[[length(s4_in) + 1]] <- r17_18_text } else { s4_up[[length(s4_up) + 1]] <- r17_18_text }
